@@ -1,0 +1,57 @@
+---
+title: "exercise-11"
+author: "John Hinkle"
+format: html
+editor: visual
+---
+
+## Load packages and data
+
+```{r}
+library(tidyverse)
+library(skimr)
+d <- read_tsv("https://raw.githubusercontent.com/difiore/ada-datasets/main/Mammal_lifehistories_v2.txt")
+head(d)
+```
+
+## Exploratory analysis
+
+```{r}
+skim(d)
+```
+
+## Step 1: Replace -999 with NA
+
+```{r}
+
+```
+
+## Step 2:
+
+```{r}
+
+```
+
+## Step 3:
+
+```{r}
+
+```
+
+## Step 4:
+
+```{r}
+
+```
+
+## Step 5:
+
+```{r}
+
+```
+
+## Step 6:
+
+```{r}
+
+```
