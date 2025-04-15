@@ -23,19 +23,21 @@ skim(d)
 ## Step 1: Replace -999 with NA
 
 ```{r}
-
+d <- naniar::replace_with_na_all(data = d, condition = ~.x == -999)
 ```
 
-## Step 2:
+## Step 2: Drop "litter size" and "refs" variables
 
 ```{r}
-
+d <- d |>
+  select(c(-`litter size`, -refs))
 ```
 
-## Step 3:
+## Step 3: Log transform numeric variables
 
 ```{r}
-
+d <- d |>
+  mutate(across(where(is.numeric), log))
 ```
 
 ## Step 4:
