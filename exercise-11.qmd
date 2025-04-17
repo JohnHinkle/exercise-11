@@ -17,6 +17,8 @@ head(d)
 
 ## Exploratory analysis
 
+According to skim(), there are 10 numeric variables- but I assume that there are actually 9 as "refs"(reference number?) is not intended to be a numeric variable.
+
 ```{r}
 skim(d)
 ```
@@ -106,8 +108,23 @@ m15 <- lm(data = d, `AFR(mo)` ~ `wean mass(g)`)
 m16 <- lm(data = d, `AFR(mo)` ~ `mass(g)`)
 ```
 
-## Step 6b:
+## Step 6b: Model evaluation
+
+The best predictor of maximum lifespan is gestation period. No other models have a delta AICc of ≤4.
+
+The best predictor of age at first reproduction is gestation period. No other models have a delta AICc of ≤4.
 
 ```{r}
+library(AICcmodavg)
 
+aictab(list(m7, m8, m9, m10, m11), c("`max. life(mo)` ~ `gestation(mo)`", 
+                                     "`max. life(mo)` ~ `newborn(g)`", 
+                                     "`max. life(mo)` ~ `weaning(mo)`",
+                                     "`max. life(mo)` ~ `wean mass(g)`", 
+                                     "`max. life(mo)` ~ `mass(g)`"))
+aictab(list(m12, m13, m14, m15, m16), c("`AFR(mo)` ~ `gestation(mo)`", 
+                                        "`AFR(mo)` ~ `newborn(g)`", 
+                                        "`AFR(mo)` ~ `weaning(mo)`",
+                                        "`AFR(mo)` ~ `wean mass(g)`", 
+                                        "`AFR(mo)` ~ `mass(g)`"))
 ```
