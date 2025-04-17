@@ -2,6 +2,7 @@
 title: "exercise-11"
 author: "John Hinkle"
 format: html
+self-contained: true
 editor: visual
 ---
 
@@ -40,19 +41,72 @@ d <- d |>
   mutate(across(where(is.numeric), log))
 ```
 
-## Step 4:
+## Step 4a: Run linear models to obtain residuals
 
 ```{r}
-
+m1 <- lm(data = d, `gestation(mo)` ~ `mass(g)`, na.action=na.exclude)
+m2 <- lm(data = d, `weaning(mo)` ~ `mass(g)`, na.action=na.exclude)
+m3 <- lm(data = d, `AFR(mo)` ~ `mass(g)`, na.action=na.exclude)
+m4 <- lm(data = d, `max. life(mo)` ~ `mass(g)`, na.action=na.exclude)
+m5 <- lm(data = d, `newborn(g)` ~ `mass(g)`, na.action=na.exclude)
+m6 <- lm(data = d, `wean mass(g)` ~ `mass(g)`, na.action=na.exclude)
 ```
 
-## Step 5:
+## Step 4b: Add new variables to the data set
 
 ```{r}
-
+d <- d |>
+  mutate(relGest = residuals(m1),
+         relWean = residuals(m2),
+         relAFR = residuals(m3),
+         relLife = residuals(m4),
+         relNewbornMass = residuals(m5),
+         relWeaningMass = residuals(m6))
 ```
 
-## Step 6:
+## Step 5a: Relative maximum lifespan by Order
+
+```{r}
+ggplot(data = d, aes(x = order, y = relLife)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+## Step 5b: Relative newborn mass by Order
+
+```{r}
+ggplot(data = d, aes(x = order, y = relNewbornMass)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+## Step 5c: Relative weaning mass by Order
+
+```{r}
+ggplot(data = d, aes(x = order, y = relWeaningMass)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+## Step 6a: Run linear models
+
+```{r}
+d <- drop_na(d)
+
+m7 <- lm(data = d, `max. life(mo)` ~ `gestation(mo)`)
+m8 <- lm(data = d, `max. life(mo)` ~ `newborn(g)`)
+m9 <- lm(data = d, `max. life(mo)` ~ `weaning(mo)`)
+m10 <- lm(data = d, `max. life(mo)` ~ `wean mass(g)`)
+m11 <- lm(data = d, `max. life(mo)` ~ `mass(g)`)
+
+m12 <- lm(data = d, `AFR(mo)` ~ `gestation(mo)`)
+m13 <- lm(data = d, `AFR(mo)` ~ `newborn(g)`)
+m14 <- lm(data = d, `AFR(mo)` ~ `weaning(mo)`)
+m15 <- lm(data = d, `AFR(mo)` ~ `wean mass(g)`)
+m16 <- lm(data = d, `AFR(mo)` ~ `mass(g)`)
+```
+
+## Step 6b:
 
 ```{r}
 
