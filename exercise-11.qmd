@@ -49,7 +49,7 @@ d <- d |>
 m1 <- lm(data = d, `gestation(mo)` ~ `mass(g)`, na.action=na.exclude)
 m2 <- lm(data = d, `weaning(mo)` ~ `mass(g)`, na.action=na.exclude)
 m3 <- lm(data = d, `AFR(mo)` ~ `mass(g)`, na.action=na.exclude)
-m4 <- lm(data = d, `max. life(mo)` ~ `mass(g)`, na.action=na.exclude)
+m4 <- lm(data = d, `AFR(mo)` ~ `mass(g)`, na.action=na.exclude)
 m5 <- lm(data = d, `newborn(g)` ~ `mass(g)`, na.action=na.exclude)
 m6 <- lm(data = d, `wean mass(g)` ~ `mass(g)`, na.action=na.exclude)
 ```
@@ -95,36 +95,57 @@ ggplot(data = d, aes(x = order, y = relWeaningMass)) +
 ```{r}
 d <- drop_na(d)
 
-m7 <- lm(data = d, `max. life(mo)` ~ `gestation(mo)`)
-m8 <- lm(data = d, `max. life(mo)` ~ `newborn(g)`)
-m9 <- lm(data = d, `max. life(mo)` ~ `weaning(mo)`)
-m10 <- lm(data = d, `max. life(mo)` ~ `wean mass(g)`)
-m11 <- lm(data = d, `max. life(mo)` ~ `mass(g)`)
+library(MuMIn)
+global_m1 <- lm(data = d, `AFR(mo)` ~ 
+          `gestation(mo)` + 
+          `newborn(g)` + 
+          `weaning(mo)` +
+          `wean mass(g)` + 
+          `mass(g)`, 
+          na.action = "na.fail")
 
-m12 <- lm(data = d, `AFR(mo)` ~ `gestation(mo)`)
-m13 <- lm(data = d, `AFR(mo)` ~ `newborn(g)`)
-m14 <- lm(data = d, `AFR(mo)` ~ `weaning(mo)`)
-m15 <- lm(data = d, `AFR(mo)` ~ `wean mass(g)`)
-m16 <- lm(data = d, `AFR(mo)` ~ `mass(g)`)
+models <- dredge(global_m1, m.lim = c(0, 4))
+(models.list <- get.models(models, subset = TRUE))
 ```
 
 ## Step 6b: Model evaluation
 
-The best predictor of maximum lifespan is gestation period. No other models have a delta AICc of ≤4.
-
-The best predictor of age at first reproduction is gestation period. No other models have a delta AICc of ≤4.
-
 ```{r}
 library(AICcmodavg)
 
-aictab(list(m7, m8, m9, m10, m11), c("`max. life(mo)` ~ `gestation(mo)`", 
+aictab(list(m7, m8, m9, m10, m11, m12, m13, m14, m15, m16, m17, m18, m19, m20), 
+                                  c("`max. life(mo)` ~ `gestation(mo)`", 
                                      "`max. life(mo)` ~ `newborn(g)`", 
                                      "`max. life(mo)` ~ `weaning(mo)`",
                                      "`max. life(mo)` ~ `wean mass(g)`", 
-                                     "`max. life(mo)` ~ `mass(g)`"))
-aictab(list(m12, m13, m14, m15, m16), c("`AFR(mo)` ~ `gestation(mo)`", 
-                                        "`AFR(mo)` ~ `newborn(g)`", 
-                                        "`AFR(mo)` ~ `weaning(mo)`",
-                                        "`AFR(mo)` ~ `wean mass(g)`", 
-                                        "`AFR(mo)` ~ `mass(g)`"))
+                                     "`max. life(mo)` ~ `mass(g)`",
+                                     "`max. life(mo)` ~gestation(mo)` + `wean mass(g)`",
+                                     "`max. life(mo)` ~gestation(mo)` + `newborn(g)`",
+                                     "`max. life(mo)` ~gestation(mo)` + `weaning(mo)`",
+                                     "`gestation(mo)` + `mass(g)`",
+                                     "`max. life(mo)` ~wean mass(g)` + `newborn(g)`",
+                                     "`max. life(mo)` ~wean mass(g)` + `weaning(mo)`",
+                                     "`max. life(mo)` ~wean mass(g)` + `mass(g)`",
+                                     "`max. life(mo)` ~mass(g)` + `weaning(mo)`",
+                                     "`max. life(mo)` ~mass(g)` + `newborn(g)`"))
+aictab(list(m21, m22, m23, m24, m25, m26, m27, m28, m29, m30, m31, m32, m33, m34), c("`AFR(mo)` ~ `gestation(mo)`", 
+                                     "`AFR(mo)` ~ `newborn(g)`", 
+                                     "`AFR(mo)` ~ `weaning(mo)`",
+                                     "`AFR(mo)` ~ `wean mass(g)`", 
+                                     "`AFR(mo)` ~ `mass(g)`",
+                                     "`AFR(mo)` ~gestation(mo)` + `wean mass(g)`",
+                                     "`AFR(mo)` ~gestation(mo)` + `newborn(g)`",
+                                     "`AFR(mo)` ~gestation(mo)` + `weaning(mo)`",
+                                     "`AFR(mo)` ~gestation(mo)` + `mass(g)`",
+                                     "`AFR(mo)` ~wean mass(g)` + `newborn(g)`",
+                                     "`AFR(mo)` ~wean mass(g)` + `weaning(mo)`",
+                                     "`AFR(mo)` ~wean mass(g)` + `mass(g)`",
+                                     "`AFR(mo)` ~mass(g)` + `weaning(mo)`",
+                                     "`AFR(mo)` ~mass(g)` + `newborn(g)`"))
+```
+
+## Step 6c: Plot coefficients
+
+```{r}
+
 ```
